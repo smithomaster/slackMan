@@ -9,7 +9,7 @@ pygame.init()
  
 display_width = 800
 display_height = 600
- 
+font = pygame.font.SysFont ("freesansbold.ttf", 72)
 black = (0,0,0)
 white = (255,255,255)
 red = (200,0,0)
@@ -22,13 +22,23 @@ pygame.display.set_caption('SlackMan')
 clock = pygame.time.Clock()
  
 carImg = pygame.image.load('dotter.png')
- 
+
+def quitgame():
+    pygame.quit()
+    quit()
+
+def colorText(msg, color):
+    text = font.render(msg, True, color)
+    TextSurf, TextRect = text_objects(msg, text)
+    TextRect.center = ((display_width/2),(display_height/2))
+    gameDisplay.blit(text, TextRect)
+
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
- 
-def message_display(text, color):
-    largeText = pygame.font.Font('freesansbold.ttf',115, color)
+
+def message_display(text):
+    largeText = pygame.font.Font('freesansbold.ttf', 115)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = ((display_width/2),(display_height/2))
     gameDisplay.blit(TextSurf, TextRect)
@@ -41,7 +51,7 @@ def message_display(text, color):
 
 def game_loop():
     gameDisplay.fill(black)
-    message_display("Welcome to SlackMan", white)
+    colorText("Welcome to SlackMan!", white)
     pygame.display.update()
 
 def button(msg, x, y, w, h, ic, ac, action = None):
@@ -50,12 +60,7 @@ def button(msg, x, y, w, h, ic, ac, action = None):
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
         if click[0] == 1 and action != None:
-            if action == "play:":
-                return
-                game_loop()
-            elif action == "quit":
-                pygame.quit()
-                quit()
+            action()
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
 
@@ -80,8 +85,8 @@ def game_intro():
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
 
-        button("Start Game", 150, 400, 200, 100, green, bright_green, "play")
-        button("Exit", 450, 400, 200, 100, red, bright_red, "quit")
+        button("Start Game", 150, 400, 200, 100, green, bright_green, game_loop)
+        button("Exit", 450, 400, 200, 100, red, bright_red, quitgame)
 
         pygame.display.update()
 
