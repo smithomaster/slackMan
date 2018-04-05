@@ -16,26 +16,28 @@ red = (200,0,0)
 green = (0, 200, 0)
 bright_green = (0, 255, 0)
 bright_red = (255, 0, 0)
+yellow= (255, 255, 0)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('SlackMan')
 clock = pygame.time.Clock()
- 
-carImg = pygame.image.load('dotter.png')
+
+first = pygame.image.load("media\FIRST.png")
+koalafied = pygame.image.load("media\KOALAFIED.png")
+redbacks = pygame.image.load("media\REDBACKS.png")
+woodie = pygame.image.load("media\WOODIE_FLOWERS.png")
+ditter = pygame.image.load('dotter.png')
+
 
 def quitgame():
     pygame.quit()
     quit()
 
-def colorText(msg, color):
-    text = font.render(msg, True, color)
-    TextSurf, TextRect = text_objects(msg, text)
-    TextRect.center = ((display_width/2),(display_height/2))
-    gameDisplay.blit(text, TextRect)
 
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
+
 
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf', 115)
@@ -49,10 +51,19 @@ def message_display(text):
  
     game_loop()
 
+
 def game_loop():
-    gameDisplay.fill(black)
-    colorText("Welcome to SlackMan!", white)
+    intro = False
+    gameDisplay.fill(yellow)
+    message_display("Welcome to SlackMan!")
     pygame.display.update()
+    alive = True
+    while alive:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
 
 def button(msg, x, y, w, h, ic, ac, action = None):
     mouse = pygame.mouse.get_pos()
@@ -68,6 +79,8 @@ def button(msg, x, y, w, h, ic, ac, action = None):
     textSurf, textRect = text_objects(msg, smallText)
     textRect.center = ((x + (w / 2), y + (h/2)))
     gameDisplay.blit(textSurf, textRect)
+
+
 def game_intro():
 
     intro = True
