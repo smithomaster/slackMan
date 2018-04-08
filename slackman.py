@@ -1,6 +1,5 @@
 # Game by Jacob Ditter and Emil Smith
 # Menu Elements in part by Harrison@pythonprogramming.net
-
 import pygame
 import time
 import random
@@ -34,6 +33,13 @@ def quitgame():
     quit()
 
 
+def smalltext(msg, x, y, w, h):
+    smallText = pygame.font.Font("freesansbold.ttf", 32)
+    textSurf, textRect = text_objects(msg, smallText)
+    textRect.center = ((x + (w / 2), y + (h/2)))
+    gameDisplay.blit(textSurf, textRect)
+
+
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
@@ -55,7 +61,7 @@ def message_display(text):
 def game_loop():
     intro = False
     gameDisplay.fill(yellow)
-    message_display("Welcome to SlackMan!")
+    smalltext("Welcome to SlackMan!", 150, 400, 200, 100)
     pygame.display.update()
     alive = True
     while alive:
@@ -98,12 +104,11 @@ def game_intro():
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
 
-        button("Start Game", 150, 400, 200, 100, green, bright_green, game_loop)
+        button("Start Game", 150, 400, 200, 100, green, bright_green, game_loop())
         button("Exit", 450, 400, 200, 100, red, bright_red, quitgame)
 
         pygame.display.update()
 
 game_intro()
-game_loop()
 pygame.quit()
 quit()
