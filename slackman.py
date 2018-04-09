@@ -8,6 +8,7 @@ import time
 import random
  
 pygame.init()
+pygame.mixer.init()
 won = False
 display_width = 800
 display_height = 600
@@ -20,6 +21,9 @@ bright_green = (0, 255, 0)
 bright_red = (255, 0, 0)
 yellow= (255, 255, 0)
 blue = (0,0,255)
+sound = pygame.mixer.Sound("pacman.wav")
+pygame.mixer.Sound.play(sound)
+
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('SlackMan')
@@ -128,18 +132,19 @@ def main():
     # This is a font we use to draw text on the screen (size 36)
     font = pygame.font.Font(None, 36)
 
-    # Create a surface we can draw on
-    background = pygame.Surface(screen.get_size())
-    # Used for converting color maps and such
-    background = background.convert()
-    # Fill the screen with a black background
-    background.fill(black)
+    if not won:
+        # Create a surface we can draw on
+        background = pygame.Surface(screen.get_size())
+        # Used for converting color maps and such
+        background = background.convert()
+        # Fill the screen with a black background
+        background.fill(black)
 
-    # Create the player paddle object
-    player = Player(10,10)
-    movingsprites = pygame.sprite.RenderPlain((player))
-    woodie = Woodie(360,250)
-    woodies = pygame.sprite.RenderPlain((woodie))
+        # Create the player paddle object
+        player = Player(10,10)
+        movingsprites = pygame.sprite.RenderPlain((player))
+        woodie = Woodie(360,250)
+        woodies = pygame.sprite.RenderPlain((woodie))
 
     # Make the walls. (height, width, x_pos, y_pos)
     wall_list=[]
