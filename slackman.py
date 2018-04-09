@@ -8,7 +8,7 @@ import time
 import random
  
 pygame.init()
-
+won = False
 display_width = 800
 display_height = 600
 font = pygame.font.SysFont ("freesansbold.ttf", 72)
@@ -30,6 +30,16 @@ koalafied = pygame.image.load("media\KOALAFIED.png")
 redbacks = pygame.image.load("media\REDBACKS.png")
 woodie = pygame.image.load("media\WOODIE_FLOWERS.png")
 ditter = pygame.image.load('dotter.png')
+
+def win():
+    gameDisplay.fill(white)
+    largeText = pygame.font.Font('8bit.ttf', 90)
+    TextSurf, TextRect = text_objects("You Win!", largeText)
+    TextRect.center = ((display_width / 2), (display_height / 2))
+    gameDisplay.blit(TextSurf, TextRect)
+    pygame.display.update()
+    won = True
+
  # This class represents the bar at the bottom that the player controls
 class Wall(pygame.sprite.Sprite):
     # Constructor function
@@ -65,7 +75,7 @@ class Woodie(pygame.sprite.Sprite):
     # Find a new position for the player
     def is_collided_with(self, player):
         if self.rect.colliderect(player.rect):
-            pygame.quit()
+            win()
 # This class represents the bar at the bottom that the player controls
 
 
@@ -138,13 +148,22 @@ def main():
     wall_list.append(Wall(600,10,790,0)) # right end
     wall_list.append(Wall(10,790,10,590)) # bottom end
     wall_list.append(Wall(10, 80, 10, 50))
-    wall_list.append(Wall(100, 10, 80, 60))
-
+    wall_list.append(Wall(150, 10, 80, 60))
+    wall_list.append((Wall(475,10,130, 10)))
+    wall_list.append(Wall(10,175,130,485))
+    wall_list.append(Wall(10,70,60,250))
+    wall_list.append(Wall(10, 70, 10, 300))
+    wall_list.append(Wall(190,10,80,350))
+    wall_list.append(Wall(10,575,80,540))
+    wall_list.append(Wall(100,10,370,440))
+    wall_list.append(Wall(10,170,210,430))
+    wall_list.append(Wall(300,10,655,250))
+    wall_list.append(Wall(400,10,720,150))
     walls=pygame.sprite.RenderPlain(wall_list)
 
     clock = pygame.time.Clock()
 
-    while 1:
+    while won != True:
         clock.tick(40)
 
         for event in pygame.event.get():
@@ -178,6 +197,7 @@ def main():
         woodies.draw(screen)
         walls.draw(screen)
         pygame.display.flip()
+    return
 
 def quitgame():
     pygame.quit()
@@ -205,22 +225,6 @@ def message_display(text):
     pygame.display.update()
 
     time.sleep(2)
-
-    game_loop()
-
-
-# def game_loop():
-#     intro = False
-#     gameDisplay.fill(yellow)
-#     smalltext("Welcome to SlackMan!", 150, 400, 200, 100)
-#     pygame.display.update()
-#     alive = True
-#     while alive:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 pygame.quit()
-#                 quit()
-
 
 def button(msg, x, y, w, h, ic, ac, action = None):
     mouse = pygame.mouse.get_pos()
