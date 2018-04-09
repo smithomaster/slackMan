@@ -63,24 +63,9 @@ class Woodie(pygame.sprite.Sprite):
         self.change_x+=x
         self.change_y+=y
     # Find a new position for the player
-    def update(self,walls):
-        # Get the old position, in case we need to go back to it
-        old_x=self.rect.topleft[0]
-        old_y=self.rect.topleft[1]
-
-        # Update position according to our speed (vector)
-        new_x=old_x+self.change_x
-        new_y=old_y+self.change_y
-
-        # Put the player in the new spot
-        self.rect.topleft = (new_x,new_y)
-
-        # Did this update cause us to hit a wall?
-        collide = pygame.sprite.spritecollide(self, walls, False)
-        if collide:
-            # Whoops, hit a wall. Go back to the old position
-            self.rect.topleft=(old_x,old_y)
-
+    def is_collided_with(self, player):
+        if self.rect.colliderect(player.rect):
+            pygame.quit()
 # This class represents the bar at the bottom that the player controls
 
 
@@ -127,7 +112,7 @@ def main():
     # Create an 800x600 sized screen
     screen = pygame.display.set_mode([800, 600])
     # Set the title of the window
-    pygame.display.set_caption('Test')
+    pygame.display.set_caption('SlackMan the Great one to find Woodie Flowers')
     # Enable this to make the mouse dissappear when over our window
     #pygame.mouse.set_visible(0)
     # This is a font we use to draw text on the screen (size 36)
@@ -143,6 +128,8 @@ def main():
     # Create the player paddle object
     player = Player(10,10)
     movingsprites = pygame.sprite.RenderPlain((player))
+    woodie = Woodie(360,250)
+    woodies = pygame.sprite.RenderPlain((woodie))
 
     # Make the walls. (height, width, x_pos, y_pos)
     wall_list=[]
@@ -150,6 +137,8 @@ def main():
     wall_list.append(Wall(10,790,10,0)) # top end
     wall_list.append(Wall(600,10,790,0)) # right end
     wall_list.append(Wall(10,790,10,590)) # bottom end
+    wall_list.append(Wall(10, 80, 10, 50))
+    wall_list.append(Wall(100, 10, 80, 60))
 
     walls=pygame.sprite.RenderPlain(wall_list)
 
@@ -183,9 +172,10 @@ def main():
                     player.changespeed(0,-3)
 
         player.update(walls)
-
+        woodie.is_collided_with(player)
         pygame.draw.rect(screen,black,(0,0,800,600))
         movingsprites.draw(screen)
+        woodies.draw(screen)
         walls.draw(screen)
         pygame.display.flip()
 
