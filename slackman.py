@@ -24,6 +24,7 @@ blue = (0,0,255)
 sound = pygame.mixer.Sound("pacman.wav")
 pygame.mixer.Sound.play(sound)
 
+unlockhey = False
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('SlackMan')
@@ -43,6 +44,7 @@ def win():
     gameDisplay.blit(TextSurf, TextRect)
     pygame.display.update()
     won = True
+
 
  # This class represents the bar at the bottom that the player controls
 class Wall(pygame.sprite.Sprite):
@@ -79,6 +81,7 @@ class Woodie(pygame.sprite.Sprite):
     # Find a new position for the player
     def is_collided_with(self, player):
         if self.rect.colliderect(player.rect):
+            won = True
             win()
 # This class represents the bar at the bottom that the player controls
 
@@ -145,7 +148,7 @@ def main():
         movingsprites = pygame.sprite.RenderPlain((player))
         woodie = Woodie(360,250)
         woodies = pygame.sprite.RenderPlain((woodie))
-
+    done = False
     # Make the walls. (height, width, x_pos, y_pos)
     wall_list=[]
     wall_list.append(Wall(600,10,0,0)) # right end
@@ -173,16 +176,26 @@ def main():
     wall_list.append(Wall(110,10,430,380))
     wall_list.append(Wall(10,170,260,380))
     wall_list.append(Wall(220,10,260,160))
+    wall_list.append(Wall(10,110,260,160))
+    wall_list.append(Wall(170,10,370,0))
+    wall_list.append(Wall(400,10,550,50))
+    wall_list.append(Wall(10,80,480,450))
+    wall_list.append(Wall(120,10,480,330))
+    wall_list.append(Wall(10,170,310,330))
+    wall_list.append(Wall(100,10,310,230))
+    wall_list.append(Wall(10,190,310,230))
+    wall_list.append(Wall(240,10,500,0))
     walls=pygame.sprite.RenderPlain(wall_list)
 
     clock = pygame.time.Clock()
 
     while won != True:
         clock.tick(40)
-
+        walls = pygame.sprite.RenderPlain(wall_list)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+            print(event)
 
             if event.type == KEYDOWN:
                 if event.key == K_LEFT:
@@ -203,14 +216,17 @@ def main():
                     player.changespeed(0,3)
                 if event.key == K_DOWN:
                     player.changespeed(0,-3)
+        if won == False:
+            walls.draw(screen)
+            player.update(walls)
+            woodie.is_collided_with(player)
+            pygame.draw.rect(screen,black,(0,0,800,600))
+            movingsprites.draw(screen)
+            woodies.draw(screen)
+            walls.draw(screen)
+            walls = pygame.sprite.RenderPlain(wall_list)
+            pygame.display.flip()
 
-        player.update(walls)
-        woodie.is_collided_with(player)
-        pygame.draw.rect(screen,black,(0,0,800,600))
-        movingsprites.draw(screen)
-        woodies.draw(screen)
-        walls.draw(screen)
-        pygame.display.flip()
     return
 
 def quitgame():
